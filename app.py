@@ -141,15 +141,26 @@ if uploaded_file:
 # ----------------- PDF Conversion -----------------
 def input_pdf_setup(uploaded_file):
     if uploaded_file is not None:
-        images = pdf2image.convert_from_bytes(uploaded_file.read())
+        # Specify the path to the Poppler binaries you included in your app
+        poppler_path = './poppler-utils/bin'  # Adjust this based on where you stored the Poppler binary
+
+        # Convert PDF to image
+        images = pdf2image.convert_from_bytes(uploaded_file.read(), poppler_path=poppler_path)
+
         first_page = images[0]
+
+        # Convert to bytes
         img_byte_arr = io.BytesIO()
         first_page.save(img_byte_arr, format="JPEG")
         img_byte_arr = img_byte_arr.getvalue()
-        return [{
-            "mime_type": "image/jpeg",
-            "data": base64.b64encode(img_byte_arr).decode()
-        }]
+
+        pdf_parts = [
+            {
+                "mime_type": "image/jpeg",
+                "data": base64.b64encode(img_byte_arr).decode()  # encode to base64
+            }
+        ]
+        return pdf_parts
     else:
         raise FileNotFoundError
 
