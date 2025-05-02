@@ -1,4 +1,7 @@
 streamlit
 google-generativeai
-python-dotenv
 pdf2image
+Pillow
+streamlit-lottie
+requests
+python-dotenv
